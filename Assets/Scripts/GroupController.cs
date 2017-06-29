@@ -29,6 +29,7 @@ public class GroupController : MonoBehaviour {
         }
         else
         {
+            GridController.UpdateGrid(transform);
             FindObjectOfType<Createor>().SpawnNext();
             enabled = false;
         }

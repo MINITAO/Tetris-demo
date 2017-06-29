@@ -47,9 +47,11 @@ public class GridController : MonoBehaviour {
     public static void UpdateGrid(Transform group)
     {
         ClearOldDate(group);
-        foreach(Transform child in group)
+        foreach (Transform child in group)
         {
-            grid[(int)child.position.x, (int)child.position.y] = child;
+            int x = (int)Mathf.Round(child.position.x);
+            int y = (int)Mathf.Round(child.position.y);
+            grid[x, y] = child;
         }
     }
 
@@ -93,8 +95,11 @@ public class GridController : MonoBehaviour {
     {
         foreach(Transform child in group)
         {
-            int x = (int)child.position.x;
-            int y = (int)child.position.y;
+            //这两句四舍五入让我纠结了半天, 不这样做的话, 会出现方块凌空的问题, 一开始我以为是数据更新的错,
+            //后来纠结了半天, 发现原来是这里的问题. 一开始我用的是int的强转, 后来改成这个才ok,
+            //估计unity内部表示坐标时, 会出现1表示为0.99999这样的情况.
+            int x = Mathf.RoundToInt(child.position.x);
+            int y = Mathf.RoundToInt(child.position.y);
             if (!(grid[x, y] == null || grid[x, y].parent == group))
             {
                 return false;
@@ -103,5 +108,6 @@ public class GridController : MonoBehaviour {
         return true;
     }
 
- 
+
+
 }
