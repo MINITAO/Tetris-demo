@@ -9,14 +9,14 @@ public class GroupController : MonoBehaviour {
     
     void Start()
     {
-        if (GridController.MakeEffectiveMove(transform, Vector3.zero))
+        if (MakeEffectiveMove(Vector3.zero))
         {
             canMove = true;
         }
         else
         {
-            FindObjectOfType<GameController>().GameOver();
             canMove = false;
+            FindObjectOfType<GameController>().GameOver();
         }
     }
 
@@ -34,6 +34,37 @@ public class GroupController : MonoBehaviour {
         }
 	}
 
+    bool MakeEffectiveMove(Vector3 move)
+    {
+        Vector3 nowPos = transform.position;
+        transform.position += move;
+        if (GridController.IsValid(transform))
+        {
+            GridController.UpdateGrid(transform);
+            return true;
+        }
+        else
+        {
+            transform.position = nowPos;
+            return false;
+        }
+    }
+
+    bool MakeEffectiveRotate(Vector3 rotation)
+    {
+        transform.Rotate(rotation);
+        if(GridController.IsValid(transform))
+        {
+            GridController.UpdateGrid(transform);
+            return true;
+        }
+        else
+        {
+            transform.Rotate(-rotation);
+            return false;
+        }
+    }
+
     /// <summary>
     /// 玩家控制方块的方向和变形
     /// </summary>
@@ -41,19 +72,19 @@ public class GroupController : MonoBehaviour {
     {
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            GridController.MakeEffectiveMove(transform, new Vector3(-1, 0, 0));
+            MakeEffectiveMove(new Vector3(-1, 0, 0));
         }
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            GridController.MakeEffectiveMove(transform, new Vector3(1, 0, 0));
+            MakeEffectiveMove(new Vector3(1, 0, 0));
         }
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            GridController.MakeEffectiveMove(transform, new Vector3(0, -1, 0));
+            MakeEffectiveMove(new Vector3(0, -1, 0));
         }
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            GridController.MakeEfffectiveRotation(transform, new Vector3(0, 0, -90));
+            MakeEffectiveRotate(new Vector3(0, 0, -90));
         }
     }
 
@@ -65,7 +96,7 @@ public class GroupController : MonoBehaviour {
         int time = (int)(Time.time - lastFallTime);
         if (time>=1)
         {
-            if(GridController.MakeEffectiveMove(transform, new Vector3(0, -1, 0)))
+            if(MakeEffectiveMove(new Vector3(0, -1, 0)))
             {
                 lastFallTime = Time.time;
             }
