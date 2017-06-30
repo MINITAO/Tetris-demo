@@ -9,9 +9,15 @@ public class GroupController : MonoBehaviour {
     private GridController m_GridController;
     private GameController m_GameController;
     private float m_CreateTime;
+    private InputController m_InputController;
 
     void Start()
     {
+#if UNITY_STANDALONE
+        m_InputController = new StandalonController();
+#elif UNITY_ANDROID
+        m_InputController = new TouchController();
+#endif
         m_GridController = FindObjectOfType<GridController>();
         m_GameController = FindObjectOfType<GameController>();
         m_CreateTime = Time.time;
@@ -91,19 +97,19 @@ public class GroupController : MonoBehaviour {
     /// </summary>
     void InputControl()
     {
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (m_InputController.MoveLeft())
         {
             MakeEffectiveMove(new Vector3(-1, 0, 0));
         }
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (m_InputController.MoveRight())
         {
             MakeEffectiveMove(new Vector3(1, 0, 0));
         }
-        if (Input.GetKey(KeyCode.DownArrow) && Time.time - m_CreateTime >= 1) // 生成1秒后才允许快速下落, 提高用户体验
+        if (m_InputController.FastMoveDown() && Time.time - m_CreateTime >= 1) // 生成1秒后才允许快速下落, 提高用户体验
         {
             MakeEffectiveMove(new Vector3(0, -1, 0));
         }
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (m_InputController.MakeChange())
         {
             // TO不允许旋转
             if(!gameObject.tag.Equals("TO"))
