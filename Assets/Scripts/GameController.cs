@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum GameState
 {
@@ -53,6 +54,17 @@ public class GameController : MonoBehaviour {
     public void AddSorce()
     {
         m_UIController.AddSore(m_Score);
+    }
+
+    public void ResetGame()
+    {
+        SceneManager.LoadScene("Main");
+        m_UIController.ResetUI();
+    }
+
+    public void RollbackGame()
+    {
+        SceneManager.LoadScene("Title");
     }
 
 }
