@@ -8,12 +8,13 @@ public class GroupController : MonoBehaviour {
     private bool canMove = true;
     private GridController m_GridController;
     private GameController m_GameController;
+    private float m_CreateTime;
 
     void Start()
     {
         m_GridController = FindObjectOfType<GridController>();
         m_GameController = FindObjectOfType<GameController>();
-
+        m_CreateTime = Time.time;
         if (MakeEffectiveMove(Vector3.zero)) // 生成后立即更新网格数据, 0移动表示使用当时位置的数据
         {
             canMove = true;
@@ -98,7 +99,7 @@ public class GroupController : MonoBehaviour {
         {
             MakeEffectiveMove(new Vector3(1, 0, 0));
         }
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (Input.GetKey(KeyCode.DownArrow) && Time.time - m_CreateTime >= 1) // 生成1秒后才允许快速下落, 提高用户体验
         {
             MakeEffectiveMove(new Vector3(0, -1, 0));
         }
