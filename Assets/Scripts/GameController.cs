@@ -11,22 +11,48 @@ public enum GameState
 
 public class GameController : MonoBehaviour {
 
-    public static GameState gamestate = GameState.start;
+    public static GameState gamestate;
+    public int m_Score = 100;
+
+    private UIController m_UIController;
 
 	// Use this for initialization
 	void Start () {
-        gamestate = GameState.running;
-        FindObjectOfType<Createor>().SpawnNext();
+        m_UIController = FindObjectOfType<UIController>();
+        gamestate = GameState.start;
+        StartGame();
 	}
 
-    public static void SpawnNext()
+    void Update()
+    {
+        if (gamestate == GameState.running)
+        {
+            m_UIController.Timing();
+        }
+    }
+
+
+    public void StartGame()
+    {
+        gamestate = GameState.running;
+        FindObjectOfType<Createor>().SpawnNext();
+        m_UIController.ShowGameOver(false);
+    }
+
+    public void SpawnNext()
     {
         FindObjectOfType<Createor>().SpawnNext();
     }
 	
-    public static void GameOver()
+    public void GameOver()
     {
         gamestate = GameState.end;
-        Debug.Log("GameOver");
+        m_UIController.ShowGameOver(true);
     }
+
+    public void AddSorce()
+    {
+        m_UIController.AddSore(m_Score);
+    }
+
 }

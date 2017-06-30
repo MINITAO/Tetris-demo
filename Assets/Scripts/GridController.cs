@@ -6,11 +6,16 @@ public class GridController : MonoBehaviour {
 
     public static int width = 10;
     public static int height = 20;
-
     public static Transform[,] grid = new Transform[width, height];
-
     public static int leftBorder = 0;
     public static int rightBorder = 9;
+
+    private GameController m_GameController;
+
+    void Start()
+    {
+        m_GameController = FindObjectOfType<GameController>();
+    }
 
     /// <summary>
     /// 清除未移动前的数据
@@ -34,7 +39,7 @@ public class GridController : MonoBehaviour {
     /// 更新网格数据
     /// </summary>
     /// <param name="group"></param>
-    public static void UpdateGrid(Transform group)
+    public void UpdateGrid(Transform group)
     {
         ClearOldDate(group);
         foreach (Transform child in group)
@@ -51,7 +56,7 @@ public class GridController : MonoBehaviour {
     /// <param name="group"></param>
     /// <param name="offset"></param>
     /// <returns></returns>
-    public static bool IsValid(Transform group)
+    public bool IsValid(Transform group)
     {
         return IsInBorder(group) && IsEffectiveGrid(group);
     }
@@ -61,7 +66,7 @@ public class GridController : MonoBehaviour {
     /// </summary>
     /// <param name="pos"></param>
     /// <returns></returns>
-    static bool IsInBorder(Transform group)
+    bool IsInBorder(Transform group)
     {
         foreach (Transform child in group)
         {
@@ -81,7 +86,7 @@ public class GridController : MonoBehaviour {
     /// <param name="group"></param>
     /// <param name="offset"></param>
     /// <returns></returns>
-    static bool IsEffectiveGrid(Transform group)
+    bool IsEffectiveGrid(Transform group)
     {
         foreach (Transform child in group)
         {
@@ -101,7 +106,7 @@ public class GridController : MonoBehaviour {
     /// <summary>
     /// 清除已经满的行
     /// </summary>
-    public static void ClearFullRow()
+    public void ClearFullRow()
     {
         //从顶部逆向循环检查是否有满行的存在
         for(int row = height - 1; row >= 0; row--)
@@ -119,6 +124,7 @@ public class GridController : MonoBehaviour {
             {
                 ClearRow(row);
                 MoveRow(row);
+                m_GameController.AddSorce();
             }
         }       
     }

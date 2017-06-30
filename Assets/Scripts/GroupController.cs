@@ -6,9 +6,14 @@ public class GroupController : MonoBehaviour {
 
     private float lastFallTime;
     private bool canMove = true;
-    
+    private GridController m_GridController;
+    private GameController m_GameController;
+
     void Start()
     {
+        m_GridController = FindObjectOfType<GridController>();
+        m_GameController = FindObjectOfType<GameController>();
+
         if (MakeEffectiveMove(Vector3.zero)) // 生成后立即更新网格数据, 0移动表示使用当时位置的数据
         {
             canMove = true;
@@ -16,7 +21,7 @@ public class GroupController : MonoBehaviour {
         else
         {
             canMove = false;
-            GameController.GameOver();      // 刚生成就不能移动, 即判定为gameover
+            m_GameController.GameOver();      // 刚生成就不能移动, 即判定为gameover
         }
     }
 
@@ -31,9 +36,9 @@ public class GroupController : MonoBehaviour {
         {
             if(GameController.gamestate == GameState.running)
             {
-                GridController.UpdateGrid(transform);
-                GridController.ClearFullRow();
-                GameController.SpawnNext();
+                m_GridController.UpdateGrid(transform);
+                m_GridController.ClearFullRow();
+                m_GameController.SpawnNext();
             }
             enabled = false;
         }
@@ -48,9 +53,9 @@ public class GroupController : MonoBehaviour {
     {
         Vector3 nowPos = transform.position;
         transform.position += move;
-        if (GridController.IsValid(transform))
+        if (m_GridController.IsValid(transform))
         {
-            GridController.UpdateGrid(transform);
+            m_GridController.UpdateGrid(transform);
             return true;
         }
         else
@@ -68,9 +73,9 @@ public class GroupController : MonoBehaviour {
     bool MakeEffectiveRotate(Vector3 rotation)
     {
         transform.Rotate(rotation);
-        if(GridController.IsValid(transform))
+        if(m_GridController.IsValid(transform))
         {
-            GridController.UpdateGrid(transform);
+            m_GridController.UpdateGrid(transform);
             return true;
         }
         else
