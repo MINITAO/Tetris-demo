@@ -2,15 +2,31 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum GameState
+{
+    start,
+    running,
+    end
+}
+
 public class GameController : MonoBehaviour {
+
+    public static GameState gamestate = GameState.start;
 
 	// Use this for initialization
 	void Start () {
-		
+        gamestate = GameState.running;
+        FindObjectOfType<Createor>().SpawnNext();
 	}
-	
-    public void GameOver()
+
+    public static void SpawnNext()
     {
-        Time.timeScale = 0;
+        FindObjectOfType<Createor>().SpawnNext();
+    }
+	
+    public static void GameOver()
+    {
+        gamestate = GameState.end;
+        Debug.Log("GameOver");
     }
 }

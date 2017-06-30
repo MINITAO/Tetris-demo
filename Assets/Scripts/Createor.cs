@@ -4,18 +4,13 @@ using UnityEngine;
 
 public class Createor : MonoBehaviour {
 
-    public GameObject[] groups;
+    public Transform[] groups;
 
-	// Use this for initialization
-	void Start () {
-        SpawnNext();
-	}
-	
     public void SpawnNext()
     {
-        int i = Random.Range(0, groups.Length);
-        Instantiate(groups[i], transform.position, Quaternion.identity);
+        if(GameController.gamestate != GameState.end)
+        {
+            Instantiate(groups[Random.Range(0, groups.Length)], transform.position, Quaternion.identity);
+        }
     }
-
-
 }

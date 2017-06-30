@@ -9,14 +9,14 @@ public class GroupController : MonoBehaviour {
     
     void Start()
     {
-        if (MakeEffectiveMove(Vector3.zero))
+        if (MakeEffectiveMove(Vector3.zero)) // 生成后立即更新网格数据, 0移动表示使用当时位置的数据
         {
             canMove = true;
         }
         else
         {
             canMove = false;
-            FindObjectOfType<GameController>().GameOver();
+            GameController.GameOver();      // 刚生成就不能移动, 即判定为gameover
         }
     }
 
@@ -29,12 +29,21 @@ public class GroupController : MonoBehaviour {
         }
         else
         {
-            GridController.UpdateGrid(transform);
-            FindObjectOfType<Createor>().SpawnNext();
+            if(GameController.gamestate == GameState.running)
+            {
+                GridController.UpdateGrid(transform);
+                GridController.ClearFullRow();
+                GameController.SpawnNext();
+            }
             enabled = false;
         }
 	}
 
+    /// <summary>
+    /// 做有效的移动
+    /// </summary>
+    /// <param name="move"></param>
+    /// <returns></returns>
     bool MakeEffectiveMove(Vector3 move)
     {
         Vector3 nowPos = transform.position;
@@ -51,6 +60,11 @@ public class GroupController : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// 做有效的旋转
+    /// </summary>
+    /// <param name="rotation"></param>
+    /// <returns></returns>
     bool MakeEffectiveRotate(Vector3 rotation)
     {
         transform.Rotate(rotation);
@@ -85,7 +99,11 @@ public class GroupController : MonoBehaviour {
         }
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            MakeEffectiveRotate(new Vector3(0, 0, -90));
+            // TO不允许旋转
+            if(!gameObject.tag.Equals("TO"))
+            {
+                MakeEffectiveRotate(new Vector3(0, 0, -90));
+            }
         }
     }
 

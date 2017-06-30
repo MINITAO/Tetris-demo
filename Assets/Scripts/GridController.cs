@@ -13,16 +13,6 @@ public class GridController : MonoBehaviour {
     public static int rightBorder = 9;
 
     /// <summary>
-    /// 对传入的Vector2四舍五入int的坐标值
-    /// </summary>
-    /// <param name="v"></param>
-    /// <returns>对x,y四舍五入后的新Vector2</returns>
-    public static Vector2 Vector2Round(Vector2 v)
-    {
-        return new Vector2(Mathf.Round(v.x), Mathf.Round(v.y));
-    }
-
-    /// <summary>
     /// 清除未移动前的数据
     /// </summary>
     /// <param name="group"></param>
@@ -73,10 +63,10 @@ public class GridController : MonoBehaviour {
     /// <returns></returns>
     static bool IsInBorder(Transform group)
     {
-        foreach(Transform child in group)
+        foreach (Transform child in group)
         {
-            if (!((int)child.position.x >= leftBorder && 
-                  (int)child.position.x <= rightBorder && 
+            if (!((int)child.position.x >= leftBorder &&
+                  (int)child.position.x <= rightBorder &&
                   (int)child.position.y >= 0))
             {
                 return false;
@@ -93,7 +83,7 @@ public class GridController : MonoBehaviour {
     /// <returns></returns>
     static bool IsEffectiveGrid(Transform group)
     {
-        foreach(Transform child in group)
+        foreach (Transform child in group)
         {
             //这两句四舍五入让我纠结了半天, 不这样做的话, 会出现方块凌空的问题, 一开始我以为是数据更新的错,
             //后来纠结了半天, 发现原来是这里的问题. 一开始我用的是int的强转, 后来改成这个才ok,
@@ -108,6 +98,63 @@ public class GridController : MonoBehaviour {
         return true;
     }
 
+    /// <summary>
+    /// 清除已经满的行
+    /// </summary>
+    public static void ClearFullRow()
+    {
+        //从顶部逆向循环检查是否有满行的存在
+        for(int row = height - 1; row >= 0; row--)
+        {
+            bool isFull = true;
+            for(int x = 0; x < width; x++)
+            {
+                if(grid[x, row] == null)
+                {
+                    isFull = false;
+                    break;
+                }
+            }
+            if (isFull)
+            {
+                ClearRow(row);
+                MoveRow(row);
+            }
+        }       
+    }
+
+    /// <summary>
+    /// 清除某一行的数据
+    /// </summary>
+    /// <param name="row"></param>
+    static void ClearRow(int row)
+    {
+        for (int x = 0; x < width; x++)
+        {
+            Destroy(grid[x, row].gameObject);
+        }
+    }
+
+    /// <summary>
+    /// 将该行以上的数据都下移一格
+    /// </summary>
+    /// <param name="row"></param>
+    static void MoveRow(int row)
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = row; y < height - 1; y++)
+            {
+                //移动方格的Transform
+                if (grid[x, y + 1])
+                {
+                    grid[x, y + 1].position += new Vector3(0, -1, 0);
+                }
+                //移动方格内的数据
+                grid[x, y] = grid[x, y + 1];
+            }
+        }
+    }
 
 
 }
