@@ -78,15 +78,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Createor.cs" />
-    <Compile Include="Assets\Scripts\GameController.cs" />
-    <Compile Include="Assets\Scripts\GridController.cs" />
-    <Compile Include="Assets\Scripts\GroupController.cs" />
-    <Compile Include="Assets\Scripts\InputController.cs" />
-    <Compile Include="Assets\Scripts\StandalonController.cs" />
-    <Compile Include="Assets\Scripts\TitleController.cs" />
-    <Compile Include="Assets\Scripts\TouchController.cs" />
-    <Compile Include="Assets\Scripts\UIController.cs" />
+    <Compile Include="Assets\Scripts\GameManager.cs" />
+    <Compile Include="Assets\Scripts\Input\InputController.cs" />
+    <Compile Include="Assets\Scripts\Input\StandalonController.cs" />
+    <Compile Include="Assets\Scripts\Input\TouchController.cs" />
+    <Compile Include="Assets\Scripts\MainScence\Createor.cs" />
+    <Compile Include="Assets\Scripts\MainScence\GridController.cs" />
+    <Compile Include="Assets\Scripts\MainScence\GroupController.cs" />
+    <Compile Include="Assets\Scripts\MainScence\MainSceneManager.cs" />
+    <Compile Include="Assets\Scripts\MainScence\UIController.cs" />
+    <Compile Include="Assets\Scripts\TitleScene\EndButton.cs" />
+    <Compile Include="Assets\Scripts\TitleScene\StartButton.cs" />
+    <Compile Include="Assets\Scripts\TitleScene\TitleSceneManager.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
